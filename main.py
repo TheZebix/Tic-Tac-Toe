@@ -23,9 +23,27 @@ class Game:
         print("Welcome in Tic Tac Toe!\nHere's our board:")
         print(self.board_names)
     
+    def reset(self):
+        self.signs = [['-', '-', '-'],
+                      ['-', '-', '-'],
+                      ['-', '-', '-']]
+
+        self.board_names = '''
+        a     b     c
+           |     |     
+    1  1a  | 1b  |  1c 
+      _____|_____|_____
+           |     |     
+    2  2a  | 2b  |  2c 
+      _____|_____|_____
+           |     |     
+    3  3a  | 3b  |  3c 
+           |     |     '''
+        
+
     def game_mode(self):
         print("Choose game mode:\n 1) player vs player\n 2) player vs bot")
-        game_type = input(">>")
+        game_type = input(">> ")
         if (game_type == "1" or game_type == "2"):
             return int(game_type)
 
@@ -103,41 +121,50 @@ class Game:
             return True
 
 END = False
+again = 'Y'
 print("-----------------------------------------------------------------")
 game = Game()
-if(game.game_mode() == 1):
-    print("You choose first option, player vs player")
-    print("-----------------------------------------------------------------")
-    player1_name = input("Enter name of first player: ")
-    player2_name = input("Enter name of second player: ")
-    rep = 0
-    while END == False:
-        rep += 1
+while again != 'N':
+    game.reset()
+    if(game.game_mode() == 1):
+        print("You choose first option, player vs player")
         print("-----------------------------------------------------------------")
-        print(f"{player1_name} turn")
-        game.take_input_x()
-        if(rep >= 3 and game.check_win(player1 = player1_name, player2 = player2_name)):
-            END = True
-            print(game.board_names)
-            break
+        player1_name = input("Enter name of first player: ")
+        player2_name = input("Enter name of second player: ")
+        rep = 0
         print(game.board_names)
-        print("-----------------------------------------------------------------")
-        print(f"{player2_name} turn")
-        game.take_input_o()
-        if(rep >= 3 and game.check_win(player1 = player1_name, player2 = player2_name)):
-            END = True
+        while END == False:
+            rep += 1
+            print("-----------------------------------------------------------------")
+            print(f"{player1_name} turn")
+            game.take_input_x()
+            if(rep >= 3 and game.check_win(player1 = player1_name, player2 = player2_name)):
+                END = True
+                print(game.board_names)
+                break
             print(game.board_names)
-            break
-        print(game.board_names)
+            print("-----------------------------------------------------------------")
+            print(f"{player2_name} turn")
+            game.take_input_o()
+            if(rep >= 3 and game.check_win(player1 = player1_name, player2 = player2_name)):
+                END = True
+                print(game.board_names)
+                break
+            print(game.board_names)
 
-else:
-    print("You choose second option, player vs bot")
-    rep = 0
-    while END == False:
-        print("-----------------------------------------------------------------")
-        game.take_input_x()
-        game.place_cricle()
-        rep += 1
-        if(rep >= 3 and game.check_win()):
-            END = True
+    else:
+        print("You choose second option, player vs bot")
         print(game.board_names)
+        rep = 0
+        while END == False:
+            print("-----------------------------------------------------------------")
+            game.take_input_x()
+            game.place_cricle()
+            rep += 1
+            if(rep >= 3 and game.check_win()):
+                END = True
+            print(game.board_names)
+
+    again = input("Do you want to play again?(Y/N): ")
+    print("-----------------------------------------------------------------")
+    END = False
