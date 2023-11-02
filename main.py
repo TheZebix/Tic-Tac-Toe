@@ -29,7 +29,7 @@ class Game:
         if (game_type == "1" or game_type == "2"):
             return int(game_type)
 
-    def take_input(self):
+    def take_input_x(self):
         user_input = input("Enter the field name(example: 2b)>> ")
         if(self.signs[int(user_input[0]) - 1][ord(user_input[1]) - 97] != 'O'):
             self.signs[int(user_input[0]) - 1][ord(user_input[1]) - 97] = 'X'
@@ -37,7 +37,17 @@ class Game:
         else:
             print("You can't do that! Enter the field name again")
             print(self.board_names)
-            self.take_input()
+            self.take_input_x()
+
+    def take_input_o(self):
+        user_input = input("Enter the field name(example: 2b)>> ")
+        if(self.signs[int(user_input[0]) - 1][ord(user_input[1]) - 97] != 'X'):
+            self.signs[int(user_input[0]) - 1][ord(user_input[1]) - 97] = 'O'
+            self.board_names = self.board_names.replace(user_input, ' O')
+        else:
+            print("You can't do that! Enter the filed name again")
+            print(self.board_names)
+            self.take_input_o()
 
     def draw_position(self):
         self.o_position = []
@@ -54,45 +64,78 @@ class Game:
             self.place_cricle()
     
     #* Main mechanic 
-    def check_win(self):
+
+    def check_draw(self):
+        check = []
+        for i in range(3):
+            check.append('-' in self.signs[i])
+        return (check[0] == False == check[1] == check[2])
+
+    def check_win(self, player1 = "You", player2 = "Bot"):
         if(self.signs[0][0] != '-' and self.signs[0][0] == self.signs[1][1] == self.signs[2][2]):
             if(self.signs[0][0] == 'X'):
-                print("YOU WON!!!")
+                print(f"{player1} won!!!")
             else:
-                print("You lost")
+                print(f"{player2} won!!!")
             return True
         elif(self.signs[0][2] != '-' and self.signs[0][2] == self.signs[1][1] == self.signs[2][0]):
             if(self.signs[0][2] == 'X'):
-                print("YOU WON!!!")
+                print(f"{player1} won!!!")
             else:
-                print("You lost")
+                print(f"{player2} won!!!")
             return True
         for i in range(3):
             if(self.signs[i][0] != '-' and [self.signs[i][0]] * len(self.signs[i]) == self.signs[i]):
                 if(self.signs[i][0] == 'X'): 
-                    print("YOU WON!!!")
+                    print(f"{player1} won!!!")
                 else:
-                    print("You lost")
+                    print(f"{player2} won!!!")
                 return True
             if(self.signs[0][i] != '-' and self.signs[0][i] == self.signs[1][i] == self.signs[2][i]):
                 if(self.signs[0][i] == 'X'):
-                    print("YOU WON!!!")
+                    print(f"{player1} won!!!")
                 else:
-                    print("You lost")
+                    print(f"{player2} won!!!")
                 return True
+        
+        if(self.check_draw()):
+            print("It's a draw!")
+            return True
 
 END = False
 print("-----------------------------------------------------------------")
 game = Game()
 if(game.game_mode() == 1):
     print("You choose first option, player vs player")
-    pass
+    print("-----------------------------------------------------------------")
+    player1_name = input("Enter name of first player: ")
+    player2_name = input("Enter name of second player: ")
+    rep = 0
+    while END == False:
+        rep += 1
+        print("-----------------------------------------------------------------")
+        print(f"{player1_name} turn")
+        game.take_input_x()
+        if(rep >= 3 and game.check_win(player1 = player1_name, player2 = player2_name)):
+            END = True
+            print(game.board_names)
+            break
+        print(game.board_names)
+        print("-----------------------------------------------------------------")
+        print(f"{player2_name} turn")
+        game.take_input_o()
+        if(rep >= 3 and game.check_win(player1 = player1_name, player2 = player2_name)):
+            END = True
+            print(game.board_names)
+            break
+        print(game.board_names)
+
 else:
     print("You choose second option, player vs bot")
     rep = 0
     while END == False:
         print("-----------------------------------------------------------------")
-        game.take_input()
+        game.take_input_x()
         game.place_cricle()
         rep += 1
         if(rep >= 3 and game.check_win()):
